@@ -27,6 +27,22 @@ plugs:
   mount-observe:
   network-bind:
 
+# These slots expose the rabbitmq binaries and libraries to consumer snaps as
+# well as the generated erlang cookie file used to authenticate with the rabbitmq
+# server. Sharing these allows other snaps to use this snap instead of bundling
+# and managing their own rabbitmq instance for each snap which requires one.
+slots:
+  rabbitmq:
+    interface: content
+    content: bins
+    read:
+      - $SNAP
+  cookie:
+    interface: content
+    content: cookie
+    read:
+      - $SNAP_COMMON/cookie
+
 apps:
   rabbitmq-server:
     daemon: simple
