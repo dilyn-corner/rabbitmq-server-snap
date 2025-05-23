@@ -34,8 +34,12 @@ apps:
     restart-delay: 10s
     command: usr/lib/erlang/bin/rabbitmq-server
     stop-command: usr/lib/erlang/bin/rabbitmqctl stop
+    environment:
+      HOME: ${SNAP_COMMON}/cookie
   rabbitmqctl:
     command: usr/lib/erlang/bin/rabbitmqctl
+    environment:
+      HOME: ${SNAP_COMMON}/cookie
 
 parts:
   rabbitmq-support:
