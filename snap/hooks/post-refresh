@@ -1,0 +1,23 @@
+#!/bin/sh -eux
+
+_old_cookie="${SNAP_USER_DATA}/.erlang.cookie"
+_new_cookie="${SNAP_COMMON}/cookie/.erlang.cookie"
+
+mkdir -p "${SNAP_COMMON}/cookie"
+
+# Ensure a cookie exists. If one was not created by the installation hook
+# (because someone was using the snap before the installation hook existed), we
+# should make sure we use the same cookie that's been in use by that user. This
+# can be located in $SNAP_USER_DATA, or (what the snap thinks is) $HOME. This
+# guarantees that existing installations can be used by new snaps without having
+# to reinstall this snap.
+if [ ! -e "$_new_cookie" ]; then
+  if [ -e "$_old_cookie" ]; then
+    cp -f "$_old_cookie" "$_new_cookie"
+    rm -f "$_old_cookie"
+  else
+    # Somehow, no cookie exists. Create one.
+    tr -dc A-Za-z0-9 </dev/urandom | head -c 13 > "$_new_cookie"
+    chmod 0400 "$_new_cookie"
+  fi
+fi
